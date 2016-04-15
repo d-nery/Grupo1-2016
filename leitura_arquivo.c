@@ -40,19 +40,20 @@ int main(int argc, char **argv) {
 			return 0;
 
 		default:
+			{
 				// Se chegou aqui, a leitura deu certo e você pode fazer alguma
 				// coisa com os dados.
 				int i;
 
 				// Apenas um exemplo, mostra os dados em hexadecimal e ASCII.
-				for (i = 0; i < count; i+=5) {
-					if (i == count-5)
-						printf("Total: ");
-					else
-						printf("Celula: %c ", buffer[i]);
-					printf("%c%c%c%c", buffer[i+1], buffer[i+2], buffer[i+3], buffer[i+4]) ;
+				for (i = 0; i < count-6; i += 5) {
+					printf("Celula: %c ", buffer[i]);
+					printf("Voltagem: %c%c%c%c", buffer[i+1], buffer[i+2], buffer[i+3], buffer[i+4]) ;
+					printf("\n");
+				}
+				printf("Total: %c%c%c%c", buffer[i+1], buffer[i+2], buffer[i+3], buffer[i+4]);
 				printf("\n");
-
+			}
 
 		}
 	}
