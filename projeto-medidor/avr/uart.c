@@ -29,6 +29,7 @@
 #include <util/setbaud.h>
 
 void uart_init() {
+	// Ver documentação de util/setbaud.h para essas constantes
 	UBRRH = UBRRH_VALUE;
 	UBRRL = UBRRL_VALUE;
 
@@ -38,11 +39,12 @@ void uart_init() {
 	UCSRA &= ~(1 << U2X);
 #endif
 
-	UCSRC = (1 << UCSZ1) | (1 << UCSZ0); // 8N1
+	UCSRC |= (1 << URSEL) | (1 << UCSZ1) | (1 << UCSZ0); // 8N1
 	UCSRB |= (1 << TXEN); // Ativa transmissão
 }
 
 int uart_putchar(char c) {
+	// Espera acabar transmissão passada
 	loop_until_bit_is_set(UCSRA, UDRE);
 	UDR = c;
 	return 0;
