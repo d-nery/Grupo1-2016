@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 	}
 
 	for (;;) {
-		char buffer[40];
+		unsigned char buffer[40];
 		ssize_t count;
 
 		// read retorna o número de bytes lidos, que é salvo na variável count.
@@ -43,16 +43,30 @@ int main(int argc, char **argv) {
 			{
 				// Se chegou aqui, a leitura deu certo e você pode fazer alguma
 				// coisa com os dados.
-				int i;
 
-				// Apenas um exemplo, mostra os dados em hexadecimal e ASCII.
-				for (i = 0; i < count-6; i += 5) {
-					printf("Celula: %c ", buffer[i]);
-					printf("Voltagem: %c%c%c%c", buffer[i+1], buffer[i+2], buffer[i+3], buffer[i+4]) ;
-					printf("\n");
+
+				if (buffer[0] < 7) {
+					/*if (buffer[7] != (unsigned char)(buffer[0]+buffer[1]+buffer[2]+buffer[3]+buffer[4]+'\r'+'\n'))
+						printf("Erro checksum. Perda de bytes.\n");
+					else */{
+						printf("Celula: %d ", buffer[0]);
+						printf("Voltagem: %c%c%c%c", buffer[1], buffer[2], buffer[3], buffer[4]) ;
+						printf("\n");
+					}
+					/*printf("Buffer[7]:%d \n", buffer[7]);
+					printf("Soma: %d \n", (unsigned char)(buffer[0]+buffer[1]+buffer[2]+buffer[3]+buffer[4]+'\r'+'\n'));*/
+
 				}
-				printf("Total: %c%c%c%c", buffer[i+1], buffer[i+2], buffer[i+3], buffer[i+4]);
-				printf("\n");
+				else if(buffer[0] == 'T'){
+					/*if (buffer [5] != (unsigned char)('T'+buffer[1]+buffer[2]+buffer[3]+buffer[4]))
+						printf("Erro checksum. Perda de bytes.\n");
+					else*/{
+						printf("Total: %c%c%c%c", buffer[1], buffer[2], buffer[3], buffer[4]);
+						printf("\n");
+					}
+					/*printf("Buffer[5]:%d \n", buffer[5]);
+					printf("Soma: %d \n", (unsigned char)('T'+buffer[1]+buffer[2]+buffer[3]+buffer[4]));*/
+				}
 			}
 
 		}

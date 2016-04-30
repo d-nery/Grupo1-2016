@@ -33,6 +33,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdlib.h>
 
 #include "uart.h"
 
@@ -141,11 +142,16 @@ int main(void) {
 	// Status LED on.
 	ledOn();
 
+	int comprimento = 4;
+	int prec = 2;
+	char voltagem[5];
+
 	// Infinite loop.
 	while (1) {
 		////////////////////// @TODO Incorporar codigo Bluetooth nesse loop //////////////////////
 		i++;
-
+		//unsigned char Total = 'T'+voltagem[0]+voltagem[1]+voltagem[2]+voltagem[3];
+		//unsigned char Soma = i+voltagem[0]+voltagem[1]+voltagem[2]+voltagem[3]+'\r'+'\n';
 		// Display the cell number to be displayed.
 		displayFor1S('N', 'o', i, 2);
 
@@ -153,6 +159,17 @@ int main(void) {
 		// cells[0] = voltage accross cell "i".
 		cells[i] = getVoltage(i);
 		cells[0] = cells[i] - cells[i - 1];
+		dtostrf(cells[0], comprimento, prec, voltagem);
+
+		uart_putchar(i);
+		uart_putchar(voltagem[0]);
+		uart_putchar(voltagem[1]);
+		uart_putchar(voltagem[2]);
+		uart_putchar(voltagem[3]);
+		uart_putchar('\r');
+		uart_putchar('\n');
+		//uart_putchar(Soma);
+
 
 		// Displays the voltage accross cell "i".
 		getDigits(cells[0], &ten, &unit, &tenth, &hundredth);
@@ -164,11 +181,18 @@ int main(void) {
 
 			getDigits(cells[cellCount], &ten, &unit, &tenth, &hundredth);
 
-			if (ten)
+			if (ten){
 				displayFor1S(ten, unit, tenth, 2);
-			else
+			} else
 				displayFor1S(unit, tenth, hundredth, 1);
 
+			dtostrf(cells[i], comprimento, prec, voltagem);
+			uart_putchar('T');
+			uart_putchar(voltagem[0]);
+			uart_putchar(voltagem[1]);
+			uart_putchar(voltagem[2]);
+			uart_putchar(voltagem[3]);
+			//uart_putchar(Total);
 			i = 0;
 			cells[0] = 0.0;
 		}
